@@ -83,4 +83,17 @@ div#game {
   width: 100px;
   height: 100px;
   float:left;
+  font-weight: bold;
+  font-size: 95px;
+  line-height: 95px;
+  text-align: center;
+}
+
+.square img {
+  border: none;
+}
+
+.square a, .square a:visited, .square a:hover {
+  color: white;
+  background-color: white;
 }
