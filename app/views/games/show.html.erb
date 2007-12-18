@@ -1,8 +1,6 @@
-<p>
-  <b>Result:</b>
-  <%=h @game.result %>
-</p>
+<%= error_messages_for :game %>
+<% content_for :script, javascript_include_tag(:defaults) %>
 
-
-<%= link_to 'Edit', edit_game_path(@game) %> |
-<%= link_to 'Back', games_path %>
+<div id="game">
+  <%= generate_squares(@game) %>
+</div>
