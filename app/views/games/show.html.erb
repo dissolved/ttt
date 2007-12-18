@@ -4,3 +4,5 @@
 <div id="game">
   <%= generate_squares(@game) %>
 </div>
+
+<%= button_to "New Game?", games_path, :method => :post, :style => 'display: none;', :id => 'NewGameBtn' %>

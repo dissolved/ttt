@@ -18,20 +18,34 @@ class GamesController < ApplicationController
     end
   end
 
+  # GET /games/new
+  def new
+  end
+
   # POST /games
   def create
     @game = Game.new()
+
+    respond_to do |format|
+      if @game.save
+        flash[:notice] = 'Good luck.'
+        format.html { redirect_to(@game) }
+      else
+        format.html { render :action => "new" }
+      end
+    end
   end
 
   # PUT /games/1
   def update
     @game = Game.find(params[:id])
     
-    
     render :update do |page|
+      @game.move(params[:move])
       page["s#{params[:move]}"].replace_html 'X'
-      
-      page[id].visual_effect :highlight
+      page["s#{@game.computer_move}"].replace_html 'O' unless @game.over?
+      page[:NewGameBtn].show if @game.over?
     end
   end
+
 end

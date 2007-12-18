@@ -2,16 +2,8 @@ class State < ActiveRecord::Base
   has_many :games
   acts_as_tree :order => "favorability DESC"
   
-  def before_create
-    # initial favorability ratings based on final outcome
-    player = winner
-    if player
-      self.favorability = self.favorability + 50
-      self.ancestors.each do |state|
-        bias = state.turn_player == player ? 1 : -1
-        state.update_attribute(:favorability, state.favorability + bias * state.turn)
-      end
-    end
+  def after_create
+    self.update_favorability
   end
 
   def self.root
@@ -35,8 +27,10 @@ class State < ActiveRecord::Base
   end
   
   def make_move(cell)
-    raise RecordNotFound, "Invalid State Transition" unless moves.include?(cell)
-    return children.find_by_move(cell)
+    logger.info("CALLING make_move(#{cell})")
+    new_state = children.find_by_move(cell) if moves.include?(cell)
+    new_state.update_favorability if new_state.finished?
+    new_state
   end
   
   def finished?
@@ -70,6 +64,18 @@ class State < ActiveRecord::Base
   end
     
   protected
+  
+  def update_favorability
+    player = winner
+    if player
+      logger.info("SETTING UP FAVORABILITY... Winner = #{player}")
+      self.favorability = self.favorability + 50
+      self.ancestors.each do |old_state|
+        bias = (old_state.turn_player == player) ? -1 : 1
+        old_state.update_attribute(:favorability, old_state.favorability + bias * old_state.turn)
+      end
+    end
+  end
   
   def encode_board(newVal)
     newVal.collect { |c| c == nil ? ' ' : c }.to_s

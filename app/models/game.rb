@@ -4,4 +4,20 @@ class Game < ActiveRecord::Base
   def before_create
     self.state = State.root
   end
+  
+  def move(cell)
+    new_state = self.state.make_move(cell.to_i)
+    update_attribute(:state, new_state)
+  end
+  
+  def computer_move
+    new_state = self.state.make_move(self.state.moves.first)
+    update_attribute(:state, new_state)
+    new_state.move
+  end
+  
+  def over?
+    self.state.finished?
+  end
+  
 end
