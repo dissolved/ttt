@@ -1,7 +1,7 @@
 class CreateGames < ActiveRecord::Migration
   def self.up
     create_table :games do |t|
-      t.integer :result
+      t.belongs_to :state
 
       t.timestamps
     end

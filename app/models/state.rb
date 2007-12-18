@@ -1,4 +1,5 @@
 class State < ActiveRecord::Base
+  has_many :games
   acts_as_tree :order => "favorability DESC"
   
   def before_create
