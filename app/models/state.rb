@@ -68,11 +68,18 @@ class State < ActiveRecord::Base
   def update_favorability
     player = winner
     if player
-      logger.info("SETTING UP FAVORABILITY... Winner = #{player}")
-      self.favorability = self.favorability + 50
-      self.ancestors.each do |old_state|
-        bias = (old_state.turn_player == player) ? -1 : 1
-        old_state.update_attribute(:favorability, old_state.favorability + bias * old_state.turn)
+      self.update_attribute(:favorability, self.favorability + 1000)
+      self.ancestors.each do |ancestor|
+        equivalents = State.find_all_by_board(ancestor.read_attribute('board'))
+        equivalents.each do |old_state|
+          logger.info("UPDATING UP FAVORABILITY... for state=#{old_state.id}")
+          bias = (old_state.turn_player == player) ? -1 : 1
+          old_state.update_attribute(:favorability, old_state.favorability + bias * old_state.turn * old_state.turn)
+        end
+      end
+    else
+      if turn == 9
+        
       end
     end
   end
