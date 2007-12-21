@@ -16,8 +16,8 @@ class Game < ActiveRecord::Base
     new_state.move
   end
   
-  def over?
-    self.state.finished?
+  def finished?
+    self.state.board.finished?
   end
   
 end
