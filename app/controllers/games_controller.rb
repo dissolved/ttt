@@ -43,8 +43,8 @@ class GamesController < ApplicationController
     render :update do |page|
       @game.move(params[:move])
       page["s#{params[:move]}"].replace_html 'X'
-      page["s#{@game.computer_move}"].replace_html 'O' unless @game.over?
-      page[:NewGameBtn].show if @game.over?
+      page["s#{@game.computer_move}"].replace_html 'O' unless @game.finished?
+      page[:NewGameBtn].show if @game.finished?
     end
   end
 
