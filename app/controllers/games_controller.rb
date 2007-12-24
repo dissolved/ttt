@@ -24,7 +24,7 @@ class GamesController < ApplicationController
 
   # POST /games
   def create
-    @game = Game.new()
+    @game = Game.new
 
     respond_to do |format|
       if @game.save
@@ -48,4 +48,13 @@ class GamesController < ApplicationController
     end
   end
 
+  def teach
+    100.times do
+      game = Game.new
+      until game.finished? do
+        game.computer_move
+      end
+    end
+    render :text => 'Thank you sir may I have another.'
+  end
 end

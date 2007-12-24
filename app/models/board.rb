@@ -100,28 +100,34 @@ class Board < Array
   
   # returns an array that can be used to map values from this board to those of the other board passed as a parameter
   def translation(other)
-    mapping = Board.new('012345678')
-    copy = other.dup
-    4.times do
-      break if self == copy
-      copy = copy.rotate
-      mapping = mapping.rotate
-      break if self == copy
-      copy = copy.mirror
-      mapping = mapping.mirror
+    mapping = translate_rotations(other)
+    if mapping.nil?
+      mapping = translate_rotations(other, true)
     end
     mapping.to_a
+  end
+  
+  def translate_rotations(other, mirrored = false)
+    mapping, copy = Board.new('012345678'), other.dup
+    mapping, copy = mapping.mirror, copy.mirror if mirrored
+    
+    begin
+      copy = copy.rotate
+      mapping = mapping.rotate
+    end until self == copy || other == copy
+
+    self == copy ? mapping : nil
   end
   
   
   # returns the first cell that is different from the board being passed as a parameter
   def detect_move(other)
     each_index do |index|
-      return index if at(index) == other[index]
+      return index if at(index) != other[index]
     end
   end
 
-  protected
+ # protected
   
   # returns a new Board rotated clockwise 90 degrees
   def rotate
