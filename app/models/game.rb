@@ -1,5 +1,9 @@
 class Game < ActiveRecord::Base
   composed_of :board, :mapping => %w(board board)
+  
+  def after_create
+    computer_move if computer == "X"
+  end
     
   def move(cell)
     make_move(cell)
@@ -8,12 +12,14 @@ class Game < ActiveRecord::Base
   def computer_move
     state, translation = State.find_from_equivalent(board)
     returning(translation[state.favorite_child_board.detect_move(state.reference_board)]) { |cell| make_move(cell) }
-    #children = state.children
-    #children.first.reference_board.detect_move(state.reference_board)
   end
   
   def finished?
     board.finished?
+  end
+  
+  def [](index)
+    board[index.to_i]
   end
   
   protected

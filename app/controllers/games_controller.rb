@@ -20,11 +20,12 @@ class GamesController < ApplicationController
 
   # GET /games/new
   def new
+    @game = Game.new
   end
 
   # POST /games
   def create
-    @game = Game.new
+    @game = Game.new(params[:game])
 
     respond_to do |format|
       if @game.save
@@ -42,8 +43,11 @@ class GamesController < ApplicationController
     
     render :update do |page|
       @game.move(params[:move])
-      page["s#{params[:move]}"].replace_html 'X'
-      page["s#{@game.computer_move}"].replace_html 'O' unless @game.finished?
+      page["s#{params[:move]}"].replace_html @game[params[:move]]
+      unless @game.finished?
+        computer_move = @game.computer_move
+        page["s#{computer_move}"].replace_html @game[computer_move]
+      end
       page[:NewGameBtn].show if @game.finished?
     end
   end

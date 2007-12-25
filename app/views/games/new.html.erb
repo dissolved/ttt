@@ -1,2 +1,6 @@
-
-<%= button_to "Yes", games_path, :method => :post %>
+<% form_for @game do |form| %>
+  Computer plays: 
+  <%= form.radio_button :computer, 'X' %>X
+  <%= form.radio_button :computer, 'O' %>O
+  <%= submit_tag "Play" %>
+<% end %>
