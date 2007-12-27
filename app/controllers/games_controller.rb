@@ -3,23 +3,16 @@ class GamesController < ApplicationController
   # GET /games
   def index
     @games = Game.find(:all)
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   # GET /games/1
   def show
     @game = Game.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-    end
   end
 
   # GET /games/new
   def new
+    flash[:notice] = 'Would you like to play a game?'
     @game = Game.new
   end
 
@@ -27,13 +20,12 @@ class GamesController < ApplicationController
   def create
     @game = Game.new(params[:game])
 
-    respond_to do |format|
-      if @game.save
-        flash[:notice] = 'Good luck.'
-        format.html { redirect_to(@game) }
-      else
-        format.html { render :action => "new" }
-      end
+    if @game.save
+      flash[:notice] = 'Good luck.'
+      redirect_to(@game)
+    else
+      flash[:notice] = 'Sorry, there was a problem starting your game.'
+      render :action => "new"
     end
   end
 
@@ -48,17 +40,10 @@ class GamesController < ApplicationController
         computer_move = @game.computer_move
         page["s#{computer_move}"].replace_html @game[computer_move]
       end
-      page[:NewGameBtn].show if @game.finished?
+      if @game.finished?
+        page[:flash].replace_html "The only winning move is not to play. #{link_to 'Play Again?', new_game_path}"
+      end
     end
   end
 
-  def teach
-    100.times do
-      game = Game.new
-      until game.finished? do
-        game.computer_move
-      end
-    end
-    render :text => 'Thank you sir may I have another.'
-  end
 end

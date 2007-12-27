@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :games, :collection => { :teach => :get }
+  map.resources :games
 
 
   # Sample resource route with options:

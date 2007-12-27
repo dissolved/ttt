@@ -9,10 +9,11 @@
   <%= yield :script %>
 </head>
 <body>
-
-<p style="color: green"><%= flash[:notice] %></p>
-
-<%= yield  %>
+<h1 id="header">Tic Tac Toe</h1>
+<div id="content">
+  <div id="flash"><%= flash[:notice] %></div>
+  <%= yield  %>  
+</div>
 
 </body>
 </html>
