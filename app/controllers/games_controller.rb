@@ -1,17 +1,14 @@
 class GamesController < ApplicationController
 
-  # GET /games
-  def index
-    @games = Game.find(:all)
-  end
-
   # GET /games/1
   def show
     @game = Game.find(params[:id])
+    render_404("Authorization Denied") unless cookies[:lazy_authentication] == @game.cookie
   end
 
   # GET /games/new
   def new
+    cookies[:lazy_authentication] ||= (request.remote_ip + Time.now.to_s).tr("A-Ma-mN-Zn-z0-9","N-ZN-ZA-MA-Mb-k")
     flash[:notice] = 'Would you like to play a game?'
     @game = Game.new
   end
@@ -19,7 +16,8 @@ class GamesController < ApplicationController
   # POST /games
   def create
     @game = Game.new(params[:game])
-
+    @game.cookie = cookies[:lazy_authentication]
+    
     if @game.save
       flash[:notice] = 'Good luck.'
       redirect_to(@game)

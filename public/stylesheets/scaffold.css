@@ -119,6 +119,11 @@ form {
   margin-bottom: 10px;;
   text-align: center;
   font-weight: bold;
-  font-size: 95px;
-  line-height: 95px;
+  font-size: 3em;
+  line-height: 3em;
+}
+
+form input {
+  position: relative;
+  top: -5px;
 }

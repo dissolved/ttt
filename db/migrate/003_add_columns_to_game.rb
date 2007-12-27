@@ -1,6 +1,6 @@
 class AddColumnsToGame < ActiveRecord::Migration
   def self.up
-    add_column :games, :computer, :string, :default => 'O'
+    add_column :games, :computer, :string, :default => 'X'
     add_column :games, :cookie, :string
   end
 
