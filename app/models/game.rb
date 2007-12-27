@@ -1,11 +1,13 @@
 class Game < ActiveRecord::Base
   composed_of :board, :mapping => %w(board board)
   
+  # If the computer is playing 'X', make the first move immediately after creating the game
   def after_create
     computer_move if computer == "X"
   end
     
-  def move(cell)
+    
+  def human_move(cell)
     make_move(cell)
   end
   
@@ -33,7 +35,9 @@ class Game < ActiveRecord::Base
   end
   
   
-  
+  # This is where the computer "learns" how to play better.  The general idea is to reward moves that lead
+  # a win or a draw, and penalize moves that lead to a loss.  The weights were more or less chosen arbitrarily,
+  # and I'm certain with more time or research, a better system could be used here.
   def learn
     if board.winner
       favorability = 100

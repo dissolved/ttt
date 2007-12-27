@@ -32,7 +32,7 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     
     render :update do |page|
-      @game.move(params[:move])
+      @game.human_move(params[:move])
       page["s#{params[:move]}"].replace_html @game[params[:move]]
       unless @game.finished?
         computer_move = @game.computer_move
